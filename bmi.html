@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BMI Health Check</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1d2671, #c33764);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      animation: fadeIn 0.8s ease;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 15px;
+      margin-bottom: 14px;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: #c33764;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #c33764, #1d2671);
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+
+    pre {
+      margin-top: 15px;
+      background: #f6f7fb;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      max-height: 200px;
+      overflow: auto;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>BMI Health Check</h2>
+
+    <form id="bmiForm">
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="number" id="height" placeholder="Height (cm)" required />
+      <input type="number" id="weight" placeholder="Weight (kg)" required />
+      <input type="number" id="age" placeholder="Age" />
+      <select id="gender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      <button type="submit">Check BMI</button>
+    </form>
+
+    <pre id="result"></pre>
+  </div>
+
+  <script>
+    document.getElementById("bmiForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const data = {
+        email: document.getElementById("email").value,
+        height_cm: Number(document.getElementById("height").value),
+        weight: Number(document.getElementById("weight").value),
+        age: Number(document.getElementById("age").value),
+        gender: document.getElementById("gender").value
+      };
+
+      const res = await fetch("https://santhosh24.app.n8n.cloud/webhook/bmi-check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const json = await res.json();
+      document.getElementById("result").textContent = JSON.stringify(json, null, 2);
+    });
+  </script>
+
+</body>
+</html>
